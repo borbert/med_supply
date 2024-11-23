@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -19,11 +20,12 @@ import {
 } from '@/components/ui/table'
 import { Input } from '@/components/ui/input'
 import { ShoppingCart, Minus, Plus, Trash2 } from 'lucide-react'
-import { useState } from 'react'
 
 export interface CartItem {
   id: string
   name: string
+  description?: string
+  sku?: string
   quantity: number
   price: number
   maxQuantity: number
@@ -41,12 +43,27 @@ export function Cart({ items, onUpdateQuantity, onRemoveItem, onCheckout }: Cart
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
+  const handleCheckout = () => {
+    onCheckout()
+    setIsOpen(false)
+  }
+
   const updateQuantity = (itemId: string, delta: number) => {
     const item = items.find(i => i.id === itemId)
     if (!item) return
 
     const newQuantity = Math.max(0, Math.min(item.maxQuantity, item.quantity + delta))
     onUpdateQuantity(itemId, newQuantity)
+  }
+
+  const handleQuantityChange = (itemId: string, value: string) => {
+    const quantity = parseInt(value)
+    if (!isNaN(quantity)) {
+      const item = items.find(i => i.id === itemId)
+      if (item) {
+        onUpdateQuantity(itemId, Math.min(quantity, item.maxQuantity))
+      }
+    }
   }
 
   return (
@@ -61,9 +78,12 @@ export function Cart({ items, onUpdateQuantity, onRemoveItem, onCheckout }: Cart
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent className="w-[400px] sm:w-[540px] flex flex-col">
+      <SheetContent className="w-[400px] sm:w-[540px] flex flex-col" aria-describedby="cart-description">
         <SheetHeader>
-          <SheetTitle>Cart</SheetTitle>
+          <SheetTitle>Shopping Cart</SheetTitle>
+          <p id="cart-description" className="text-sm text-muted-foreground">
+            Review and manage your selected items
+          </p>
         </SheetHeader>
         <div className="flex-1 overflow-y-auto py-4">
           {items.length === 0 ? (
@@ -75,16 +95,27 @@ export function Cart({ items, onUpdateQuantity, onRemoveItem, onCheckout }: Cart
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Item</TableHead>
-                  <TableHead>Quantity</TableHead>
-                  <TableHead className="text-right">Price</TableHead>
-                  <TableHead></TableHead>
+                  <TableHead className="w-[40%]">Item</TableHead>
+                  <TableHead className="w-[20%]">SKU</TableHead>
+                  <TableHead className="w-[20%]">Quantity</TableHead>
+                  <TableHead className="text-right w-[15%]">Price</TableHead>
+                  <TableHead className="w-[5%]"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {items.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell>{item.name}</TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{item.name}</div>
+                        {item.description && (
+                          <div className="text-sm text-muted-foreground mt-1">
+                            {item.description}
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>{item.sku || '-'}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <Button
@@ -99,12 +130,7 @@ export function Cart({ items, onUpdateQuantity, onRemoveItem, onCheckout }: Cart
                         <Input
                           type="number"
                           value={item.quantity}
-                          onChange={(e) => {
-                            const value = parseInt(e.target.value)
-                            if (!isNaN(value)) {
-                              onUpdateQuantity(item.id, Math.min(value, item.maxQuantity))
-                            }
-                          }}
+                          onChange={(e) => handleQuantityChange(item.id, e.target.value)}
                           className="w-16 text-center"
                           min={1}
                           max={item.maxQuantity}
@@ -147,10 +173,7 @@ export function Cart({ items, onUpdateQuantity, onRemoveItem, onCheckout }: Cart
           <Button 
             className="w-full" 
             disabled={items.length === 0}
-            onClick={() => {
-              onCheckout()
-              setIsOpen(false)
-            }}
+            onClick={handleCheckout}
           >
             Checkout
           </Button>

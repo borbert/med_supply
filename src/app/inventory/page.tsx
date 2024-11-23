@@ -16,14 +16,12 @@ import { Plus, AlertTriangle, TrendingUp, Package, Pencil, FolderOpen, DollarSig
 import { Badge } from '@/components/ui/badge'
 import { inventoryService, type InventoryItem, type ClinicInventoryStats, type Order } from '@/services/inventory'
 import { Header } from '@/components/header'
-import { Cart, type CartItem } from '@/components/cart'
 
 export default function InventoryPage() {
   const [isAdmin, setIsAdmin] = useState(false) // TODO: Get from auth context
   const [loading, setLoading] = useState(true)
   const [inventory, setInventory] = useState<InventoryItem[]>([])
   const [clinicStats, setClinicStats] = useState<ClinicInventoryStats[]>([])
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [recentOrders, setRecentOrders] = useState<Order[]>([])
   const clinicId = '1' // TODO: Get from auth context
 
@@ -323,29 +321,6 @@ export default function InventoryPage() {
       ) : (
         // Clinic User View
         <div className="space-y-4">
-          <div className="flex justify-end">
-            <Cart
-              items={cartItems}
-              onUpdateQuantity={(itemId, newQuantity) => {
-                setCartItems(items =>
-                  items.map(item =>
-                    item.id === itemId
-                      ? { ...item, quantity: newQuantity }
-                      : item
-                  )
-                )
-              }}
-              onRemoveItem={(itemId) => {
-                setCartItems(items => items.filter(item => item.id !== itemId))
-              }}
-              onCheckout={() => {
-                // TODO: Implement checkout logic
-                console.log('Checking out with items:', cartItems)
-                setCartItems([])
-              }}
-            />
-          </div>
-
           <Card>
             <CardHeader>
               <CardTitle>Recent Orders</CardTitle>
@@ -406,35 +381,6 @@ export default function InventoryPage() {
                       <TableCell>{item.status}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              const existingItem = cartItems.find(cartItem => cartItem.id === item.id)
-                              if (existingItem) {
-                                setCartItems(items =>
-                                  items.map(cartItem =>
-                                    cartItem.id === item.id
-                                      ? { ...cartItem, quantity: Math.min(cartItem.quantity + 1, item.quantity) }
-                                      : cartItem
-                                  )
-                                )
-                              } else {
-                                setCartItems(items => [...items, {
-                                  id: item.id,
-                                  name: item.name,
-                                  quantity: 1,
-                                  price: 10.00, // TODO: Add actual price to inventory items
-                                  maxQuantity: item.quantity
-                                }])
-                              }
-                            }}
-                            disabled={item.quantity === 0 || cartItems.some(cartItem =>
-                              cartItem.id === item.id && cartItem.quantity >= item.quantity
-                            )}
-                          >
-                            Add to Cart
-                          </Button>
                           <Button variant="ghost" size="sm">View Details</Button>
                         </div>
                       </TableCell>

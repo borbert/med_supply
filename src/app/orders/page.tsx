@@ -15,6 +15,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Plus, Package, Clock, CheckCircle } from 'lucide-react'
 import { inventoryService } from '@/services/inventory'
 import { Header } from '@/components/header'
+import { Cart, type CartItem } from '@/components/cart'
+import { OrderDetailsModal } from '@/components/order-details-modal'
+import { OrderTemplateModal } from '@/components/order-template-modal'
 
 interface Order {
   id: string
@@ -50,23 +53,29 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true)
   const [orders, setOrders] = useState<Order[]>([])
   const [orderTemplates, setOrderTemplates] = useState<OrderTemplate[]>([])
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [inventory, setInventory] = useState<any[]>([]) // Add inventory state
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
+  const [isOrderDetailsOpen, setIsOrderDetailsOpen] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState<OrderTemplate | null>(null)
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false)
   const clinicId = '1' // TODO: Get from auth context
 
   useEffect(() => {
     const loadData = async () => {
       try {
         if (isAdmin) {
-          // Admin gets all orders across clinics
           const allOrders = await inventoryService.getAllOrders()
           setOrders(allOrders)
         } else {
-          // Clinic user gets their orders and available templates
-          const [clinicOrders, templates] = await Promise.all([
+          const [clinicOrders, templates, clinicInventory] = await Promise.all([
             inventoryService.getClinicOrders(clinicId),
-            inventoryService.getClinicOrderTemplates(clinicId)
+            inventoryService.getClinicOrderTemplates(clinicId),
+            inventoryService.getClinicInventory(clinicId)
           ])
           setOrders(clinicOrders)
           setOrderTemplates(templates)
+          setInventory(clinicInventory)
         }
       } catch (error) {
         console.error('Error loading orders data:', error)
@@ -196,25 +205,50 @@ export default function OrdersPage() {
       ) : (
         // Clinic User View - Their Orders and Templates
         <Tabs defaultValue="orders" className="space-y-4">
+          <div className="flex justify-end mb-4">
+            <Cart
+              items={cartItems}
+              onUpdateQuantity={(itemId, newQuantity) => {
+                setCartItems(items =>
+                  items.map(item =>
+                    item.id === itemId
+                      ? { ...item, quantity: newQuantity }
+                      : item
+                  )
+                )
+              }}
+              onRemoveItem={(itemId) => {
+                setCartItems(items => items.filter(item => item.id !== itemId))
+              }}
+              onCheckout={() => {
+                // TODO: Implement checkout logic
+                console.log('Checking out with items:', cartItems)
+                setCartItems([])
+              }}
+            />
+          </div>
           <TabsList>
             <TabsTrigger value="orders">My Orders</TabsTrigger>
             <TabsTrigger value="templates">Order Templates</TabsTrigger>
+            <TabsTrigger value="inventory">Inventory</TabsTrigger>
           </TabsList>
 
           <TabsContent value="orders">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle>My Orders</CardTitle>
-                <Button>
-                  <Plus className="mr-2 h-4 w-4" />
-                  New Order
-                </Button>
+                <div>
+                  <CardTitle>My Orders</CardTitle>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    View and manage your orders
+                  </p>
+                </div>
               </CardHeader>
               <CardContent>
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Order Date</TableHead>
+                      <TableHead>Order ID</TableHead>
+                      <TableHead>Date</TableHead>
                       <TableHead>Items</TableHead>
                       <TableHead>Total Amount</TableHead>
                       <TableHead>Status</TableHead>
@@ -224,6 +258,7 @@ export default function OrdersPage() {
                   <TableBody>
                     {orders.map((order) => (
                       <TableRow key={order.id}>
+                        <TableCell className="font-medium">{order.id}</TableCell>
                         <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                         <TableCell>{order.items.length} items</TableCell>
                         <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
@@ -233,7 +268,16 @@ export default function OrdersPage() {
                           </span>
                         </TableCell>
                         <TableCell>
-                          <Button variant="ghost" size="sm">View Details</Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => {
+                              setSelectedOrder(order)
+                              setIsOrderDetailsOpen(true)
+                            }}
+                          >
+                            View Details
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -247,40 +291,137 @@ export default function OrdersPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Available Order Templates</CardTitle>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Quick order templates for common supplies
+                </p>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {orderTemplates.map((template) => (
-                    <Card key={template.id}>
+                    <Card key={template.id} className="flex flex-col">
                       <CardHeader>
-                        <CardTitle>{template.name}</CardTitle>
+                        <CardTitle className="text-lg">{template.name}</CardTitle>
+                        <p className="text-sm text-muted-foreground">
+                          {template.description}
+                        </p>
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="flex-1">
                         <div className="space-y-2">
-                          <p className="text-sm text-muted-foreground">{template.description}</p>
-                          <div className="flex items-center text-sm">
-                            <Package className="mr-2 h-4 w-4" />
+                          <div className="text-sm text-muted-foreground">
                             {template.items.length} items
                           </div>
                           {template.lastUsed && (
-                            <div className="flex items-center text-sm">
-                              <Clock className="mr-2 h-4 w-4" />
+                            <div className="text-sm text-muted-foreground">
                               Last used: {new Date(template.lastUsed).toLocaleDateString()}
                             </div>
                           )}
-                          <Button className="w-full">
-                            Place Order
-                          </Button>
                         </div>
                       </CardContent>
+                      <div className="p-4 pt-0">
+                        <Button
+                          className="w-full"
+                          onClick={() => {
+                            setSelectedTemplate(template)
+                            setIsTemplateModalOpen(true)
+                          }}
+                        >
+                          Place Order
+                        </Button>
+                      </div>
                     </Card>
                   ))}
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="inventory">
+            <Card>
+              <CardHeader>
+                <CardTitle>Available Items</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>In Stock</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {inventory.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>{item.name}</TableCell>
+                        <TableCell>{item.category}</TableCell>
+                        <TableCell>{item.quantity}</TableCell>
+                        <TableCell>{item.status}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                const existingItem = cartItems.find(cartItem => cartItem.id === item.id)
+                                if (existingItem) {
+                                  setCartItems(items =>
+                                    items.map(cartItem =>
+                                      cartItem.id === item.id
+                                        ? { ...cartItem, quantity: Math.min(cartItem.quantity + 1, item.quantity) }
+                                        : cartItem
+                                    )
+                                  )
+                                } else {
+                                  setCartItems(items => [...items, {
+                                    id: item.id,
+                                    name: item.name,
+                                    quantity: 1,
+                                    price: item.price || 10.00, // Fallback price if not set
+                                    maxQuantity: item.quantity
+                                  }])
+                                }
+                              }}
+                              disabled={item.quantity === 0 || cartItems.some(cartItem =>
+                                cartItem.id === item.id && cartItem.quantity >= item.quantity
+                              )}
+                            >
+                              Add to Cart
+                            </Button>
+                            <Button variant="ghost" size="sm">View Details</Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       )}
+
+      <OrderDetailsModal
+        isOpen={isOrderDetailsOpen}
+        onClose={() => {
+          setIsOrderDetailsOpen(false)
+          setSelectedOrder(null)
+        }}
+        order={selectedOrder}
+      />
+
+      <OrderTemplateModal
+        isOpen={isTemplateModalOpen}
+        onClose={() => {
+          setIsTemplateModalOpen(false)
+          setSelectedTemplate(null)
+        }}
+        template={selectedTemplate}
+        onAddToCart={(items) => {
+          setCartItems(prev => [...prev, ...items])
+        }}
+      />
     </div>
   )
 }

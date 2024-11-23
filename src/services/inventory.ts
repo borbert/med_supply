@@ -25,9 +25,15 @@ export interface OrderTemplate {
   id: string
   clinicId: string
   name: string
+  description?: string
   items: {
-    itemId: string
-    quantity: number
+    id: string
+    name: string
+    description?: string
+    defaultQuantity: number
+    price: number
+    category?: string
+    sku?: string
   }[]
   lastUsed?: string
   frequency?: number
@@ -89,7 +95,7 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 5,
         price: 25.00,
-        imageUrl: 'https://www.drugs.com/images/pills/nlm/006035601.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Amoxicillin',
         description: 'Amoxicillin 500mg capsules, Bottle of 100',
         sku: 'MED-AMOX-500',
         drugInfo: {
@@ -115,7 +121,7 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 6,
         price: 15.00,
-        imageUrl: 'https://www.drugs.com/images/pills/mmx/t110104f/lisinopril.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Lisinopril',
         description: 'Lisinopril 10mg tablets, Bottle of 90',
         sku: 'MED-LISIN-10',
         drugInfo: {
@@ -141,7 +147,7 @@ export const inventoryService = {
         status: 'Low Stock',
         orderFrequency: 4,
         price: 20.00,
-        imageUrl: 'https://www.drugs.com/images/pills/nlm/007815715.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Metformin',
         description: 'Metformin HCl 500mg tablets, Bottle of 100',
         sku: 'MED-METF-500',
         drugInfo: {
@@ -167,7 +173,7 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 3,
         price: 30.00,
-        imageUrl: 'https://www.drugs.com/images/pills/nlm/007815725.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Omeprazole',
         description: 'Omeprazole 20mg delayed-release capsules, Bottle of 30',
         sku: 'MED-OMEP-20',
         drugInfo: {
@@ -193,7 +199,7 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 2,
         price: 12.00,
-        imageUrl: 'https://www.drugs.com/images/pills/nlm/007815735.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Prednisone',
         description: 'Prednisone 5mg tablets, Bottle of 100',
         sku: 'MED-PRED-5',
         drugInfo: {
@@ -219,7 +225,7 @@ export const inventoryService = {
         status: 'Low Stock',
         orderFrequency: 4,
         price: 18.00,
-        imageUrl: 'https://www.drugs.com/images/pills/nlm/007815745.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Sertraline',
         description: 'Sertraline HCl 50mg tablets, Bottle of 30',
         sku: 'MED-SERT-50',
         drugInfo: {
@@ -245,7 +251,7 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 3,
         price: 35.00,
-        imageUrl: 'https://www.drugs.com/images/pills/nlm/007815755.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Azithromycin',
         description: 'Azithromycin 250mg tablets, Bottle of 6',
         sku: 'MED-AZIT-250',
         drugInfo: {
@@ -271,7 +277,7 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 5,
         price: 15.00,
-        imageUrl: 'https://www.drugs.com/images/pills/nlm/007815765.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Amlodipine',
         description: 'Amlodipine besylate 5mg tablets, Bottle of 90',
         sku: 'MED-AMLO-5',
         drugInfo: {
@@ -297,7 +303,7 @@ export const inventoryService = {
         status: 'Low Stock',
         orderFrequency: 4,
         price: 22.00,
-        imageUrl: 'https://www.drugs.com/images/pills/nlm/007815775.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Gabapentin',
         description: 'Gabapentin 300mg capsules, Bottle of 100',
         sku: 'MED-GABA-300',
         drugInfo: {
@@ -323,7 +329,7 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 6,
         price: 16.00,
-        imageUrl: 'https://www.drugs.com/images/pills/nlm/007815785.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Levothyroxine',
         description: 'Levothyroxine sodium 50mcg tablets, Bottle of 90',
         sku: 'MED-LEVO-50',
         drugInfo: {
@@ -433,7 +439,7 @@ export const inventoryService = {
         clinicId,
         lastOrdered: '2024-01-15',
         price: 10.00,
-        imageUrl: 'https://example.com/images/surgical-masks.jpg',
+        imageUrl: 'https://placehold.co/400x400/eee/999?text=Surgical Masks',
         description: 'Level 3 Medical Surgical Masks, Box of 50',
         sku: 'PPE-MASK-001'
       }
@@ -447,12 +453,74 @@ export const inventoryService = {
         id: '1',
         clinicId,
         name: 'Monthly PPE Order',
+        description: 'Standard monthly order for Personal Protective Equipment',
         items: [
-          { itemId: '1', quantity: 1000 },
-          { itemId: '2', quantity: 500 }
+          {
+            id: 'ppe-1',
+            name: 'Nitrile Examination Gloves (M)',
+            description: 'Powder-free nitrile examination gloves, medium size. Latex-free, suitable for medical examinations and procedures.',
+            defaultQuantity: 1000,
+            price: 0.15,
+            category: 'PPE',
+            sku: 'PPE-GLOVE-M'
+          },
+          {
+            id: 'ppe-2',
+            name: 'Surgical Masks Level 2',
+            description: 'ASTM Level 2 surgical masks with ear loops. Provides protection against fluids and particulates.',
+            defaultQuantity: 500,
+            price: 0.45,
+            category: 'PPE',
+            sku: 'PPE-MASK-L2'
+          },
+          {
+            id: 'ppe-3',
+            name: 'Face Shields',
+            description: 'Full-length face shields with anti-fog coating. Provides full facial protection against splashes and sprays.',
+            defaultQuantity: 100,
+            price: 2.50,
+            category: 'PPE',
+            sku: 'PPE-SHIELD'
+          },
+          {
+            id: 'ppe-4',
+            name: 'Disposable Isolation Gowns',
+            description: 'Level 2 fluid-resistant isolation gowns. Provides protection against light to moderate fluid exposure.',
+            defaultQuantity: 200,
+            price: 3.75,
+            category: 'PPE',
+            sku: 'PPE-GOWN'
+          },
+          {
+            id: 'ppe-5',
+            name: 'Bouffant Caps',
+            description: 'Lightweight, breathable bouffant caps with elastic band. Provides complete hair coverage.',
+            defaultQuantity: 300,
+            price: 0.25,
+            category: 'PPE',
+            sku: 'PPE-CAP'
+          },
+          {
+            id: 'ppe-6',
+            name: 'Shoe Covers (Pairs)',
+            description: 'Non-skid, fluid-resistant shoe covers. Provides protection against contamination and spills.',
+            defaultQuantity: 200,
+            price: 0.35,
+            category: 'PPE',
+            sku: 'PPE-SHOE'
+          },
+          {
+            id: 'ppe-7',
+            name: 'N95 Respirators',
+            description: 'NIOSH-approved N95 respirators. Provides 95% filtration of airborne particles.',
+            defaultQuantity: 100,
+            price: 2.95,
+            category: 'PPE',
+            sku: 'PPE-N95'
+          }
         ],
-        lastUsed: '2024-01-01',
-        frequency: 1
+        lastUsed: new Date().toISOString(),
+        frequency: 30 // days
       }
     ]
   },
