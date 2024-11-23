@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
-import { ExclamationTriangleIcon, FileTextIcon, PackageIcon } from "lucide-react"
+import { AlertTriangle, FileText, Package } from "lucide-react"
 
 interface AdminStatsProps {
   outstandingOrders: number
@@ -16,7 +16,7 @@ export function AdminStats({ outstandingOrders, lowStockItems, pendingReports }:
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Outstanding Orders</CardTitle>
-            <PackageIcon className="h-4 w-4 text-muted-foreground" />
+            <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="flex items-center space-x-2">
@@ -30,7 +30,7 @@ export function AdminStats({ outstandingOrders, lowStockItems, pendingReports }:
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
-            <ExclamationTriangleIcon className="h-4 w-4 text-muted-foreground" />
+            <AlertTriangle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="flex items-center space-x-2">
@@ -44,7 +44,7 @@ export function AdminStats({ outstandingOrders, lowStockItems, pendingReports }:
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Pending GL Reports</CardTitle>
-            <FileTextIcon className="h-4 w-4 text-muted-foreground" />
+            <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="flex items-center space-x-2">
