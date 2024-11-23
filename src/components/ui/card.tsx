@@ -6,7 +6,10 @@ interface BaseProps {
   children?: React.ReactNode
 }
 
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {}
+/* eslint-disable @typescript-eslint/no-empty-interface */
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
+  asChild?: boolean
+}
 
 const Card = React.forwardRef<HTMLDivElement, BaseProps & CardProps>(
   ({ className, children, ...props }, ref) => (
