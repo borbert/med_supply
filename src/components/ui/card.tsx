@@ -90,5 +90,3 @@ export {
   CardDescription, 
   CardContent 
 }
-
-export { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
