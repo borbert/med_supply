@@ -1,4 +1,5 @@
 import { CognitoIdentityProviderClient } from "@aws-sdk/client-cognito-identity-provider"
+import { addImageUrlsToInventoryItems } from "@/lib/inventory-utils"
 
 const cognitoClient = new CognitoIdentityProviderClient({
   region: process.env.NEXT_PUBLIC_AWS_REGION || "us-east-1",
@@ -85,7 +86,7 @@ export const inventoryService = {
   // Admin Functions
   async getGlobalInventory(): Promise<InventoryItem[]> {
     // TODO: Implement DynamoDB query for all inventory items across clinics
-    return [
+    const items = [
       {
         id: '1',
         name: 'Amoxicillin 500mg',
@@ -95,7 +96,6 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 5,
         price: 25.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Amoxicillin',
         description: 'Amoxicillin 500mg capsules, Bottle of 100',
         sku: 'MED-AMOX-500',
         drugInfo: {
@@ -121,7 +121,6 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 6,
         price: 15.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Lisinopril',
         description: 'Lisinopril 10mg tablets, Bottle of 90',
         sku: 'MED-LISIN-10',
         drugInfo: {
@@ -147,7 +146,6 @@ export const inventoryService = {
         status: 'Low Stock',
         orderFrequency: 4,
         price: 20.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Metformin',
         description: 'Metformin HCl 500mg tablets, Bottle of 100',
         sku: 'MED-METF-500',
         drugInfo: {
@@ -173,7 +171,6 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 3,
         price: 30.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Omeprazole',
         description: 'Omeprazole 20mg delayed-release capsules, Bottle of 30',
         sku: 'MED-OMEP-20',
         drugInfo: {
@@ -199,7 +196,6 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 2,
         price: 12.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Prednisone',
         description: 'Prednisone 5mg tablets, Bottle of 100',
         sku: 'MED-PRED-5',
         drugInfo: {
@@ -225,7 +221,6 @@ export const inventoryService = {
         status: 'Low Stock',
         orderFrequency: 4,
         price: 18.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Sertraline',
         description: 'Sertraline HCl 50mg tablets, Bottle of 30',
         sku: 'MED-SERT-50',
         drugInfo: {
@@ -251,7 +246,6 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 3,
         price: 35.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Azithromycin',
         description: 'Azithromycin 250mg tablets, Bottle of 6',
         sku: 'MED-AZIT-250',
         drugInfo: {
@@ -277,7 +271,6 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 5,
         price: 15.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Amlodipine',
         description: 'Amlodipine besylate 5mg tablets, Bottle of 90',
         sku: 'MED-AMLO-5',
         drugInfo: {
@@ -303,7 +296,6 @@ export const inventoryService = {
         status: 'Low Stock',
         orderFrequency: 4,
         price: 22.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Gabapentin',
         description: 'Gabapentin 300mg capsules, Bottle of 100',
         sku: 'MED-GABA-300',
         drugInfo: {
@@ -329,7 +321,6 @@ export const inventoryService = {
         status: 'In Stock',
         orderFrequency: 6,
         price: 16.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Levothyroxine',
         description: 'Levothyroxine sodium 50mcg tablets, Bottle of 90',
         sku: 'MED-LEVO-50',
         drugInfo: {
@@ -347,6 +338,8 @@ export const inventoryService = {
         }
       }
     ]
+
+    return addImageUrlsToInventoryItems(items)
   },
 
   async getAllOrders(): Promise<Order[]> {
@@ -427,23 +420,37 @@ export const inventoryService = {
 
   // Clinic User Functions
   async getClinicInventory(clinicId: string): Promise<InventoryItem[]> {
-    // TODO: Implement DynamoDB query for specific clinic's inventory
-    return [
+    // TODO: Implement DynamoDB query for clinic-specific inventory items
+    const items = [
       {
         id: '1',
-        name: 'Surgical Masks',
-        category: 'PPE',
-        quantity: 500,
-        reorderPoint: 200,
+        name: 'Amoxicillin 500mg',
+        category: 'Antibiotics',
+        quantity: 200,
+        reorderPoint: 100,
         status: 'In Stock',
-        clinicId,
-        lastOrdered: '2024-01-15',
-        price: 10.00,
-        imageUrl: 'https://placehold.co/400x400/eee/999?text=Surgical Masks',
-        description: 'Level 3 Medical Surgical Masks, Box of 50',
-        sku: 'PPE-MASK-001'
+        clinicId: '1',
+        orderFrequency: 5,
+        price: 25.00,
+        description: 'Amoxicillin 500mg capsules, Bottle of 100',
+        sku: 'MED-AMOX-500',
+        drugInfo: {
+          ndc: '68084-566-01',
+          proprietaryName: 'Amoxicillin',
+          nonProprietaryName: 'Amoxicillin',
+          dosageForm: 'CAPSULE',
+          routeOfAdministration: 'ORAL',
+          manufacturerName: 'American Health Packaging',
+          substanceName: 'AMOXICILLIN',
+          strengthNumber: '500',
+          strengthUnit: 'mg',
+          productType: 'HUMAN PRESCRIPTION DRUG',
+          marketingCategory: 'ANDA'
+        }
       }
     ]
+
+    return addImageUrlsToInventoryItems(items)
   },
 
   async getClinicOrderTemplates(clinicId: string): Promise<OrderTemplate[]> {
