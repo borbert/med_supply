@@ -22,23 +22,16 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { signIn } from '@/lib/auth'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 
 interface AuthenticationResult {
-  AccessToken: string
-  IdToken: string
-  RefreshToken: string
+	AccessToken: string
+	IdToken: string
+	RefreshToken: string
 }
 
 interface SignInResponse {
-  AuthenticationResult?: AuthenticationResult
+	AuthenticationResult?: AuthenticationResult
 }
 
 /**
@@ -90,7 +83,7 @@ export default function LoginPage() {
 				document.cookie = `accessToken=${response.AuthenticationResult.AccessToken}; path=/`
 
 				console.log('Setting navigation timeout...')
-				
+
 				// Use a timeout to ensure state is updated before navigation
 				setTimeout(() => {
 					console.log('Executing navigation...')
@@ -108,7 +101,7 @@ export default function LoginPage() {
 	return (
 		<div className="flex min-h-screen items-center justify-center">
 			<div className="w-[400px]">
-				<Card>
+				<Card >
 					<CardHeader>
 						<CardTitle>Welcome Back</CardTitle>
 						<CardDescription>Sign in to your account</CardDescription>
