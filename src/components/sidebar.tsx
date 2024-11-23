@@ -13,7 +13,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Box, LayoutDashboard, Package, Settings, ShoppingCart } from 'lucide-react'
+import { Box, LayoutDashboard, Settings, ShoppingCart } from 'lucide-react'
 
 /**
  * Navigation Routes Configuration
@@ -43,12 +43,6 @@ const routes = [
 		icon: ShoppingCart,
 		href: '/orders',
 		color: 'text-pink-500'
-	},
-	{
-		label: 'Products',
-		icon: Package,
-		href: '/products',
-		color: 'text-orange-500'
 	},
 	{
 		label: 'Settings',
