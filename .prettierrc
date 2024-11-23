@@ -1,0 +1,21 @@
+{
+  "useTabs": true,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "tabWidth": 2,
+  "printWidth": 100,
+  "importOrder": [
+    "^@core/(.*)$",
+    "^@server/(.*)$",
+    "^@ui/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
+  "jsxSingleQuote": false,
+  "bracketSpacing": true,
+  "arrowParens": "avoid"
+}
