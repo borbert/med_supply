@@ -24,6 +24,16 @@ import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { signIn } from '@/lib/auth'
 
+interface AuthenticationResult {
+  AccessToken: string
+  IdToken: string
+  RefreshToken: string
+}
+
+interface SignInResponse {
+  AuthenticationResult?: AuthenticationResult
+}
+
 /**
  * Login Page
  * 
@@ -60,10 +70,10 @@ export default function LoginPage() {
 		const password = formData.get('password') as string
 
 		try {
-			const response = await signIn(email, password)
+			const response = await signIn(email, password) as SignInResponse
 			console.log('Login successful:', response)
 
-			if (response.AuthenticationResult) {
+			if (response.AuthenticationResult?.AccessToken) {
 				// Store tokens in localStorage
 				localStorage.setItem('accessToken', response.AuthenticationResult.AccessToken)
 				localStorage.setItem('idToken', response.AuthenticationResult.IdToken)
@@ -79,6 +89,8 @@ export default function LoginPage() {
 					console.log('Executing navigation...')
 					window.location.href = '/dashboard'
 				}, 100)
+			} else {
+				throw new Error('Authentication failed: No valid tokens received')
 			}
 		} catch (err: any) {
 			console.error('Login error:', err)
@@ -106,24 +118,22 @@ export default function LoginPage() {
 								id="email"
 								name="email"
 								type="email"
+								placeholder="Enter your email"
 								required
-								className="mt-1"
 							/>
 						</div>
-
 						<div className="space-y-2">
 							<Label htmlFor="password">Password</Label>
 							<Input
 								id="password"
 								name="password"
 								type="password"
+								placeholder="Enter your password"
 								required
-								className="mt-1"
 							/>
 						</div>
-
 						<Button type="submit" className="w-full">
-							Login
+							Sign In
 						</Button>
 					</form>
 				</CardContent>
