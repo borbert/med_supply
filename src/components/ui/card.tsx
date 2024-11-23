@@ -6,9 +6,20 @@ interface BaseProps {
   children?: React.ReactNode
 }
 
-/* eslint-disable @typescript-eslint/no-empty-interface */
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  asChild?: boolean
+  variant?: "default" | "bordered"
+}
+
+interface CardHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  compact?: boolean
+}
+
+interface CardContentProps extends React.HTMLAttributes<HTMLDivElement> {
+  padded?: boolean
+}
+
+interface CardFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+  align?: "start" | "center" | "end"
 }
 
 const Card = React.forwardRef<HTMLDivElement, BaseProps & CardProps>(
@@ -24,7 +35,7 @@ const Card = React.forwardRef<HTMLDivElement, BaseProps & CardProps>(
 )
 Card.displayName = "Card"
 
-const CardHeader = React.forwardRef<HTMLDivElement, CardProps>(
+const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className, children, ...props }, ref) => (
     <div
       ref={ref}
@@ -63,7 +74,7 @@ const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttribu
 )
 CardDescription.displayName = "CardDescription"
 
-const CardContent = React.forwardRef<HTMLDivElement, CardProps>(
+const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
   ({ className, children, ...props }, ref) => (
     <div ref={ref} className={cn("p-6 pt-0", className)} {...props}>
       {children}
@@ -72,7 +83,7 @@ const CardContent = React.forwardRef<HTMLDivElement, CardProps>(
 )
 CardContent.displayName = "CardContent"
 
-const CardFooter = React.forwardRef<HTMLDivElement, CardProps>(
+const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className, children, ...props }, ref) => (
     <div
       ref={ref}
