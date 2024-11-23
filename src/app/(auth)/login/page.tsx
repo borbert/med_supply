@@ -18,11 +18,18 @@ import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { signIn } from '@/lib/auth'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 interface AuthenticationResult {
   AccessToken: string
@@ -100,52 +107,54 @@ export default function LoginPage() {
 
 	return (
 		<div className="flex min-h-screen items-center justify-center">
-			<Card className="w-[400px]">
-				<CardHeader>
-					<CardTitle>Welcome Back</CardTitle>
-					<CardDescription>Sign in to your account</CardDescription>
-				</CardHeader>
-				<CardContent>
-					{error && (
-						<Alert variant="destructive">
-							<AlertDescription>{error}</AlertDescription>
-						</Alert>
-					)}
-					<form onSubmit={handleSubmit} className="space-y-4">
-						<div className="space-y-2">
-							<Label htmlFor="email">Email</Label>
-							<Input
-								id="email"
-								name="email"
-								type="email"
-								placeholder="Enter your email"
-								required
-							/>
-						</div>
-						<div className="space-y-2">
-							<Label htmlFor="password">Password</Label>
-							<Input
-								id="password"
-								name="password"
-								type="password"
-								placeholder="Enter your password"
-								required
-							/>
-						</div>
-						<Button type="submit" className="w-full">
-							Sign In
-						</Button>
-					</form>
-				</CardContent>
-				<CardFooter className="flex justify-center">
-					<p className="text-sm text-muted-foreground">
-						Don't have an account?{' '}
-						<Link href="/signup" className="text-primary hover:underline">
-							Sign up
-						</Link>
-					</p>
-				</CardFooter>
-			</Card>
+			<div className="w-[400px]">
+				<Card>
+					<CardHeader>
+						<CardTitle>Welcome Back</CardTitle>
+						<CardDescription>Sign in to your account</CardDescription>
+					</CardHeader>
+					<CardContent>
+						{error && (
+							<Alert variant="destructive" className="mb-4">
+								<AlertDescription>{error}</AlertDescription>
+							</Alert>
+						)}
+						<form onSubmit={handleSubmit} className="space-y-4">
+							<div className="space-y-2">
+								<Label htmlFor="email">Email</Label>
+								<Input
+									id="email"
+									name="email"
+									type="email"
+									placeholder="Enter your email"
+									required
+								/>
+							</div>
+							<div className="space-y-2">
+								<Label htmlFor="password">Password</Label>
+								<Input
+									id="password"
+									name="password"
+									type="password"
+									placeholder="Enter your password"
+									required
+								/>
+							</div>
+							<Button type="submit" className="w-full">
+								Sign In
+							</Button>
+						</form>
+					</CardContent>
+					<CardFooter className="flex justify-center">
+						<p className="text-sm text-muted-foreground">
+							Don't have an account?{' '}
+							<Link href="/signup" className="text-primary hover:underline">
+								Sign up
+							</Link>
+						</p>
+					</CardFooter>
+				</Card>
+			</div>
 		</div>
 	)
 }
