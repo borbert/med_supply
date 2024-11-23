@@ -7,7 +7,7 @@ type CardDescriptionProps = React.HTMLAttributes<HTMLParagraphElement>
 type CardContentProps = React.HTMLAttributes<HTMLDivElement>
 type CardFooterProps = React.HTMLAttributes<HTMLDivElement>
 
-export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
   ({ className = "", ...props }, ref) => (
     <div
       ref={ref}
@@ -18,7 +18,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
 )
 Card.displayName = "Card"
 
-export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
+const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
   ({ className = "", ...props }, ref) => (
     <div
       ref={ref}
@@ -29,7 +29,7 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(
 )
 CardHeader.displayName = "CardHeader"
 
-export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
+const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
   ({ className = "", ...props }, ref) => (
     <h3
       ref={ref}
@@ -40,7 +40,7 @@ export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
 )
 CardTitle.displayName = "CardTitle"
 
-export const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionProps>(
+const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescriptionProps>(
   ({ className = "", ...props }, ref) => (
     <p
       ref={ref}
@@ -51,7 +51,7 @@ export const CardDescription = React.forwardRef<HTMLParagraphElement, CardDescri
 )
 CardDescription.displayName = "CardDescription"
 
-export const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
+const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
   ({ className = "", ...props }, ref) => (
     <div
       ref={ref}
@@ -62,7 +62,7 @@ export const CardContent = React.forwardRef<HTMLDivElement, CardContentProps>(
 )
 CardContent.displayName = "CardContent"
 
-export const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
+const CardFooter = React.forwardRef<HTMLDivElement, CardFooterProps>(
   ({ className = "", ...props }, ref) => (
     <div
       ref={ref}
