@@ -6,7 +6,6 @@
  */
 
 import { NextRequest } from 'next/server'
-import { getToken } from 'next-auth/jwt'
 import { Errors } from './error'
 import { UserAccess } from '../models/data-access'
 
@@ -27,7 +26,7 @@ export async function withAuth(
 ): Promise<Response> {
   try {
     const token = await getToken({ req: request })
-    
+
     if (!token) {
       throw Errors.unauthorized()
     }
@@ -56,7 +55,7 @@ export async function withAuth(
 
 // Role-based authorization middleware
 export function withRole(roles: string[]) {
-  return async function(
+  return async function (
     request: AuthenticatedRequest,
     handler: (req: AuthenticatedRequest) => Promise<Response>
   ): Promise<Response> {
