@@ -8,14 +8,15 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
+    "strict": true,
     "noEmit": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true, // Add this line
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node", // Change from "bundler" to "node"
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "preserve", // Change from "preserve" to "react-jsx"
     "incremental": true,
     "plugins": [
       {
