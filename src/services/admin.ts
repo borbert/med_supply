@@ -20,93 +20,92 @@ export interface Clinic {
   status: string
 }
 
+// Mock data for MVP
+const mockUsers: User[] = [
+  {
+    id: '1',
+    name: 'Admin User',
+    email: 'admin@example.com',
+    role: 'ADMIN',
+    status: 'Active'
+  },
+  {
+    id: '2',
+    name: 'Staff User',
+    email: 'staff@example.com',
+    role: 'STAFF',
+    status: 'Active'
+  }
+]
+
+const mockClinics: Clinic[] = [
+  {
+    id: '1',
+    name: 'Main Clinic',
+    address: '123 Main St',
+    phone: '555-0123',
+    status: 'Active'
+  },
+  {
+    id: '2',
+    name: 'Downtown Clinic',
+    address: '456 Market St',
+    phone: '555-0456',
+    status: 'Active'
+  }
+]
+
 export const adminService = {
   // User Management
   async listUsers(): Promise<User[]> {
-    try {
-      const command = new ListUsersCommand({
-        UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
-      })
-      const response = await cognitoClient.send(command)
-      
-      return (response.Users || []).map(user => ({
-        id: user.Username || "",
-        email: user.Attributes?.find(attr => attr.Name === "email")?.Value || "",
-        name: user.Attributes?.find(attr => attr.Name === "name")?.Value || "",
-        role: user.Attributes?.find(attr => attr.Name === "custom:role")?.Value || "User",
-        status: user.Enabled ? "Active" : "Inactive"
-      }))
-    } catch (error) {
-      console.error("Error listing users:", error)
-      throw error
-    }
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return mockUsers
   },
 
   async createUser(email: string, name: string, role: string = "User"): Promise<void> {
-    try {
-      const command = new AdminCreateUserCommand({
-        UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
-        Username: email,
-        UserAttributes: [
-          { Name: "email", Value: email },
-          { Name: "name", Value: name },
-          { Name: "custom:role", Value: role },
-          { Name: "email_verified", Value: "true" }
-        ],
-      })
-      await cognitoClient.send(command)
-    } catch (error) {
-      console.error("Error creating user:", error)
-      throw error
-    }
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    mockUsers.push({
+      id: String(mockUsers.length + 1),
+      email,
+      name,
+      role,
+      status: 'Active'
+    })
   },
 
   async updateUserStatus(userId: string, enable: boolean): Promise<void> {
-    try {
-      const command = enable 
-        ? new AdminEnableUserCommand({
-            UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
-            Username: userId,
-          })
-        : new AdminDisableUserCommand({
-            UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
-            Username: userId,
-          })
-      await cognitoClient.send(command)
-    } catch (error) {
-      console.error("Error updating user status:", error)
-      throw error
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    const user = mockUsers.find(u => u.id === userId)
+    if (user) {
+      user.status = enable ? 'Active' : 'Inactive'
     }
   },
 
   // Clinic Management
   async listClinics(): Promise<Clinic[]> {
-    // TODO: Implement DynamoDB or your preferred database query here
-    return [
-      { 
-        id: "1", 
-        name: "Main Street Clinic", 
-        address: "123 Main St", 
-        phone: "(555) 123-4567", 
-        status: "Active" 
-      },
-      { 
-        id: "2", 
-        name: "Downtown Medical", 
-        address: "456 Oak Ave", 
-        phone: "(555) 987-6543", 
-        status: "Active" 
-      },
-    ]
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    return mockClinics
   },
 
   async createClinic(clinic: Omit<Clinic, "id">): Promise<void> {
-    // TODO: Implement DynamoDB or your preferred database insertion here
-    console.log("Creating clinic:", clinic)
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    mockClinics.push({
+      ...clinic,
+      id: String(mockClinics.length + 1)
+    })
   },
 
   async updateClinicStatus(clinicId: string, status: string): Promise<void> {
-    // TODO: Implement DynamoDB or your preferred database update here
-    console.log("Updating clinic status:", { clinicId, status })
+    // Simulate API delay
+    await new Promise(resolve => setTimeout(resolve, 500))
+    const clinic = mockClinics.find(c => c.id === clinicId)
+    if (clinic) {
+      clinic.status = status
+    }
   }
 }

@@ -6,14 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "test:aws": "ts-node -r dotenv/config -P ./scripts/tsconfig.json scripts/test-aws.ts"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity": "^3.696.0",
-    "@aws-sdk/client-cognito-identity-provider": "^3.699.0",
-    "@aws-sdk/client-dynamodb": "^3.696.0",
-    "@aws-sdk/lib-dynamodb": "^3.698.0",
     "@nextui-org/react": "^2.4.8",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-label": "^2.1.0",

@@ -1,38 +1,24 @@
 /**
  * Login Page Component
  * 
- * Provides user authentication interface using AWS Cognito.
+ * Provides user authentication interface.
  * Features:
  * - Clean, centered card layout
- * - AWS Cognito integration
- * - Error handling and validation
  * - Responsive design
  * 
- * This page is part of the (auth) group in the Next.js App Router,
- * which handles all authentication-related routes.
+ * This page is part of the Next.js App Router.
  */
 
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { signIn } from '@/lib/auth'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-
-interface AuthenticationResult {
-	AccessToken: string
-	IdToken: string
-	RefreshToken: string
-}
-
-interface SignInResponse {
-	AuthenticationResult?: AuthenticationResult
-}
 
 /**
  * Login Page
@@ -48,106 +34,89 @@ interface SignInResponse {
  * @returns {JSX.Element} The login page component
  */
 export default function LoginPage() {
-	const [error, setError] = useState<string | null>(null)
-	const router = useRouter()
-	const searchParams = useSearchParams()
-	const redirectPath = searchParams.get('redirect') || '/dashboard'
+  const [error, setError] = useState<string | null>(null)
+  const router = useRouter()
 
-	useEffect(() => {
-		// Check if we already have tokens and redirect if we do
-		const token = localStorage.getItem('accessToken')
-		if (token) {
-			window.location.href = '/dashboard'
-		}
-	}, [])
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setError(null)
 
-	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		setError(null)
+    const formData = new FormData(e.currentTarget)
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
 
-		const formData = new FormData(e.currentTarget)
-		const email = formData.get('email') as string
-		const password = formData.get('password') as string
+    try {
+      // TODO: Implement proper authentication
+      // For MVP, just store mock user data and redirect
+      const mockUser = {
+        id: '1',
+        email: email,
+        name: 'Test User',
+        role: 'admin',
+        clinicId: '1'
+      }
 
-		try {
-			const response = await signIn(email, password) as SignInResponse
-			console.log('Login successful:', response)
+      localStorage.setItem('userData', JSON.stringify(mockUser))
+      localStorage.setItem('accessToken', 'mock-token')
 
-			if (response.AuthenticationResult?.AccessToken) {
-				// Store tokens in localStorage
-				localStorage.setItem('accessToken', response.AuthenticationResult.AccessToken)
-				localStorage.setItem('idToken', response.AuthenticationResult.IdToken)
-				localStorage.setItem('refreshToken', response.AuthenticationResult.RefreshToken)
+      router.push('/dashboard')
+    } catch (err: any) {
+      console.error('Login error:', err)
+      setError(err.message || 'An error occurred during login')
+    }
+  }
 
-				// Set cookie for middleware
-				document.cookie = `accessToken=${response.AuthenticationResult.AccessToken}; path=/`
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <Card className="w-[400px]">
+        <CardHeader>
+          <CardTitle>Welcome Back</CardTitle>
+          <CardDescription>Sign in to your account</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
 
-				console.log('Setting navigation timeout...')
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
 
-				// Use a timeout to ensure state is updated before navigation
-				setTimeout(() => {
-					console.log('Executing navigation...')
-					window.location.href = '/dashboard'
-				}, 100)
-			} else {
-				throw new Error('Authentication failed: No valid tokens received')
-			}
-		} catch (err: any) {
-			console.error('Login error:', err)
-			setError(err.message || 'An error occurred during login')
-		}
-	}
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                required
+              />
+            </div>
 
-	return (
-		<div className="flex min-h-screen items-center justify-center">
-			<div className="w-[400px]">
-				<Card >
-					<CardHeader>
-						<CardTitle>Welcome Back</CardTitle>
-						<CardDescription>Sign in to your account</CardDescription>
-					</CardHeader>
-					<CardContent>
-						{error && (
-							<Alert variant="destructive" className="mb-4">
-								<AlertDescription>{error}</AlertDescription>
-							</Alert>
-						)}
-						<form onSubmit={handleSubmit} className="space-y-4">
-							<div className="space-y-2">
-								<Label htmlFor="email">Email</Label>
-								<Input
-									id="email"
-									name="email"
-									type="email"
-									placeholder="Enter your email"
-									required
-								/>
-							</div>
-							<div className="space-y-2">
-								<Label htmlFor="password">Password</Label>
-								<Input
-									id="password"
-									name="password"
-									type="password"
-									placeholder="Enter your password"
-									required
-								/>
-							</div>
-							<Button type="submit" className="w-full">
-								Sign In
-							</Button>
-						</form>
-					</CardContent>
-					<CardFooter className="flex justify-center">
-						<p className="text-sm text-muted-foreground">
-							Don't have an account?{' '}
-							<Link href="/signup" className="text-primary hover:underline">
-								Sign up
-							</Link>
-						</p>
-					</CardFooter>
-				</Card>
-			</div>
-		</div>
-	)
+            <Button type="submit" className="w-full">
+              Sign In
+            </Button>
+          </form>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-muted-foreground">
+            Don't have an account?{' '}
+            <Link href="/signup" className="text-primary hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+    </div>
+  )
 }

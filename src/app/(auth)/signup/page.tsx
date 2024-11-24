@@ -1,16 +1,15 @@
 /**
  * Sign Up Page Component
  * 
- * Provides user registration interface using AWS Cognito.
+ * Provides user registration interface.
  * Features:
  * - Clean, centered card layout
- * - AWS Cognito integration
  * - Form validation
  * - Error handling
  * - Password strength requirements
  * 
- * This page is part of the (auth) group in the Next.js App Router,
- * which handles all authentication-related routes.
+ * This page is part of the App Router,
+ * which handles all routes.
  */
 
 'use client'
@@ -21,8 +20,13 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectItem } from '@/components/ui/select'
-import { signUp } from '@/lib/auth'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
 /**
@@ -45,7 +49,7 @@ export default function SignUpPage() {
     password: '',
     name: '',
     role: 'STAFF',
-    clinicId: 'default' // This should be replaced with actual clinic selection
+    clinicId: 'default'
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,17 +58,10 @@ export default function SignUpPage() {
     setError(null)
 
     try {
-      console.log('Submitting form data:', formData)
-      const response = await signUp(formData.email, formData.password, {
-        name: formData.name,
-        role: formData.role,
-        clinicId: formData.clinicId,
-        isActive: 'true'
-      })
-      console.log('Signup successful:', response)
-      
-      // Redirect to login page after successful registration
-      router.push('/login')
+      console.log('Form submitted:', formData)
+      // TODO: Implement proper auth
+      // For MVP, just redirect to dashboard
+      router.push('/dashboard')
     } catch (err: any) {
       console.error('Signup error:', err)
       setError(err.message || 'An error occurred during registration')
@@ -131,19 +128,16 @@ export default function SignUpPage() {
             <div className="grid gap-2">
               <Label htmlFor="role">Role</Label>
               <Select
-                id="role"
-                label="Role"
-                placeholder="Select a role"
-                defaultSelectedKeys={["STAFF"]}
                 value={formData.role}
-                onChange={(e) => {
-                  console.log('Role changed:', e.target.value)
-                  setFormData({ ...formData, role: e.target.value })
-                }}
-                className="max-w-xs"
+                onValueChange={(value) => setFormData({ ...formData, role: value })}
               >
-                <SelectItem key="STAFF" value="STAFF">Staff</SelectItem>
-                <SelectItem key="ADMIN" value="ADMIN">Admin</SelectItem>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="STAFF">Staff</SelectItem>
+                  <SelectItem value="ADMIN">Admin</SelectItem>
+                </SelectContent>
               </Select>
             </div>
 
