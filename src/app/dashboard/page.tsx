@@ -7,7 +7,7 @@
 
 'use client'
 
-import { useSession } from "next-auth/react"
+import { useEffect, useState } from 'react'
 import { AdminStats } from "@/components/dashboard/admin-stats"
 import { RecentActivity } from "@/components/dashboard/recent-activity"
 import { ProductsToOrder } from "@/components/dashboard/products-to-order"
@@ -44,21 +44,42 @@ const mockRecentActivity = [
   }
 ] as const
 
+interface UserData {
+  name?: string;
+  role?: string;
+  clinicId?: string;
+}
+
 /**
  * Dashboard Page Component
  * 
  * Renders the main dashboard view with role-specific content.
  */
 export default function DashboardPage() {
-  const { data: session } = useSession()
-  const isAdmin = session?.user?.role === 'admin'
+  const [userData, setUserData] = useState<UserData>({})
+
+  useEffect(() => {
+    // Get user data from localStorage
+    const token = localStorage.getItem('accessToken')
+    const userDataStr = localStorage.getItem('userData')
+    if (userDataStr) {
+      try {
+        const parsedUserData = JSON.parse(userDataStr)
+        setUserData(parsedUserData)
+      } catch (e) {
+        console.error('Error parsing user data:', e)
+      }
+    }
+  }, [])
+
+  const isAdmin = userData?.role === 'admin'
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Dashboard</h1>
         <p className="text-sm text-muted-foreground">
-          Welcome back, {session?.user?.name}
+          Welcome back, {userData?.name || 'User'}
         </p>
       </div>
 
@@ -96,7 +117,7 @@ export default function DashboardPage() {
                 <p>Completed Orders: 0</p>
               </CardContent>
             </Card>
-            <ProductsToOrder isAdmin={false} clinicId={session?.user?.clinicId} />
+            <ProductsToOrder isAdmin={false} clinicId={userData?.clinicId} />
           </div>
           <Card>
             <CardHeader>
