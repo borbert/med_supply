@@ -2,222 +2,222 @@
  * Data Access Functions
  * 
  * Provides specific data access functions for each table in the application.
- * These functions wrap the generic DynamoDB utility functions with type safety
+ * These functions wrap the generic database functions with type safety
  * and business logic specific to each entity.
  */
 
-import { TableNames } from '../aws-config'
+import { MOCK_CONFIG } from '../aws-config'
 import * as db from './db'
 import {
-	User,
-	Clinic,
-	Product,
-	Order,
-	Template,
-	Settings,
-	OrderStatus
+  User,
+  Clinic,
+  Product,
+  Order,
+  Template,
+  Settings,
+  OrderStatus
 } from './types'
 
 // User Functions
 export const UserAccess = {
-	async getById(id: string): Promise<User | null> {
-		return db.getById<User>(TableNames.USERS, id)
-	},
+  async getById(id: string): Promise<User | null> {
+    return db.getById(MOCK_CONFIG.tables.users, id)
+  },
 
-	async getByEmail(email: string): Promise<User | null> {
-		const users = await db.queryByIndex<User>(
-			TableNames.USERS,
-			'EmailIndex',
-			'email',
-			email
-		)
-		return users[0] || null
-	},
+  async getByEmail(email: string): Promise<User | null> {
+    const users = await db.queryByIndex(
+      MOCK_CONFIG.tables.users,
+      'email-index',
+      'email',
+      email
+    )
+    return users[0] || null
+  },
 
-	async getByClinic(clinicId: string): Promise<User[]> {
-		return db.queryByIndex<User>(
-			TableNames.USERS,
-			'ClinicIndex',
-			'clinicId',
-			clinicId
-		)
-	},
+  async getByClinic(clinicId: string): Promise<User[]> {
+    return db.queryByIndex(
+      MOCK_CONFIG.tables.users,
+      'clinic-index',
+      'clinicId',
+      clinicId
+    )
+  },
 
-	async create(user: Omit<User, 'id'>): Promise<User> {
-		return db.create<User>(TableNames.USERS, user as User)
-	},
+  async create(user: Omit<User, 'id'>): Promise<User> {
+    return db.create(MOCK_CONFIG.tables.users, user)
+  },
 
-	async update(id: string, updates: Partial<User>): Promise<User> {
-		return db.update<User>(TableNames.USERS, id, updates)
-	},
+  async update(id: string, updates: Partial<User>): Promise<User> {
+    return db.update(MOCK_CONFIG.tables.users, id, updates)
+  },
 
-	async delete(id: string): Promise<void> {
-		return db.remove(TableNames.USERS, id)
-	}
+  async delete(id: string): Promise<void> {
+    return db.remove(MOCK_CONFIG.tables.users, id)
+  }
 }
 
 // Clinic Functions
 export const ClinicAccess = {
-	async getById(id: string): Promise<Clinic | null> {
-		return db.getById<Clinic>(TableNames.CLINICS, id)
-	},
+  async getById(id: string): Promise<Clinic | null> {
+    return db.getById(MOCK_CONFIG.tables.clinics, id)
+  },
 
-	async getAll(): Promise<Clinic[]> {
-		return db.scanAll<Clinic>(TableNames.CLINICS)
-	},
+  async getAll(): Promise<Clinic[]> {
+    return db.scanAll(MOCK_CONFIG.tables.clinics)
+  },
 
-	async create(clinic: Omit<Clinic, 'id'>): Promise<Clinic> {
-		return db.create<Clinic>(TableNames.CLINICS, clinic as Clinic)
-	},
+  async create(clinic: Omit<Clinic, 'id'>): Promise<Clinic> {
+    return db.create(MOCK_CONFIG.tables.clinics, clinic)
+  },
 
-	async update(id: string, updates: Partial<Clinic>): Promise<Clinic> {
-		return db.update<Clinic>(TableNames.CLINICS, id, updates)
-	},
+  async update(id: string, updates: Partial<Clinic>): Promise<Clinic> {
+    return db.update(MOCK_CONFIG.tables.clinics, id, updates)
+  },
 
-	async delete(id: string): Promise<void> {
-		return db.remove(TableNames.CLINICS, id)
-	}
+  async delete(id: string): Promise<void> {
+    return db.remove(MOCK_CONFIG.tables.clinics, id)
+  }
 }
 
 // Product Functions
 export const ProductAccess = {
-	async getById(id: string): Promise<Product | null> {
-		return db.getById<Product>(TableNames.PRODUCTS, id)
-	},
+  async getById(id: string): Promise<Product | null> {
+    return db.getById(MOCK_CONFIG.tables.products, id)
+  },
 
-	async getByCategory(category: string): Promise<Product[]> {
-		return db.queryByIndex<Product>(
-			TableNames.PRODUCTS,
-			'CategoryIndex',
-			'category',
-			category
-		)
-	},
+  async getByCategory(category: string): Promise<Product[]> {
+    return db.queryByIndex(
+      MOCK_CONFIG.tables.products,
+      'category-index',
+      'category',
+      category
+    )
+  },
 
-	async getAll(): Promise<Product[]> {
-		return db.scanAll<Product>(TableNames.PRODUCTS)
-	},
+  async getAll(): Promise<Product[]> {
+    return db.scanAll(MOCK_CONFIG.tables.products)
+  },
 
-	async create(product: Omit<Product, 'id'>): Promise<Product> {
-		return db.create<Product>(TableNames.PRODUCTS, product as Product)
-	},
+  async create(product: Omit<Product, 'id'>): Promise<Product> {
+    return db.create(MOCK_CONFIG.tables.products, product)
+  },
 
-	async update(id: string, updates: Partial<Product>): Promise<Product> {
-		return db.update<Product>(TableNames.PRODUCTS, id, updates)
-	},
+  async update(id: string, updates: Partial<Product>): Promise<Product> {
+    return db.update(MOCK_CONFIG.tables.products, id, updates)
+  },
 
-	async delete(id: string): Promise<void> {
-		return db.remove(TableNames.PRODUCTS, id)
-	}
+  async delete(id: string): Promise<void> {
+    return db.remove(MOCK_CONFIG.tables.products, id)
+  }
 }
 
 // Order Functions
 export const OrderAccess = {
-	async getById(id: string): Promise<Order | null> {
-		return db.getById<Order>(TableNames.ORDERS, id)
-	},
+  async getById(id: string): Promise<Order | null> {
+    return db.getById(MOCK_CONFIG.tables.orders, id)
+  },
 
-	async getByClinic(clinicId: string): Promise<Order[]> {
-		return db.queryByIndex<Order>(
-			TableNames.ORDERS,
-			'ClinicOrdersIndex',
-			'clinicId',
-			clinicId
-		)
-	},
+  async getByClinic(clinicId: string): Promise<Order[]> {
+    return db.queryByIndex(
+      MOCK_CONFIG.tables.orders,
+      'clinic-index',
+      'clinicId',
+      clinicId
+    )
+  },
 
-	async getByUser(userId: string): Promise<Order[]> {
-		return db.queryByIndex<Order>(
-			TableNames.ORDERS,
-			'UserOrdersIndex',
-			'userId',
-			userId
-		)
-	},
+  async getByUser(userId: string): Promise<Order[]> {
+    return db.queryByIndex(
+      MOCK_CONFIG.tables.orders,
+      'user-index',
+      'userId',
+      userId
+    )
+  },
 
-	async getByStatus(status: OrderStatus): Promise<Order[]> {
-		return db.queryByIndex<Order>(
-			TableNames.ORDERS,
-			'StatusIndex',
-			'status',
-			status
-		)
-	},
+  async getByStatus(status: OrderStatus): Promise<Order[]> {
+    return db.queryByIndex(
+      MOCK_CONFIG.tables.orders,
+      'status-index',
+      'status',
+      status
+    )
+  },
 
-	async create(order: Omit<Order, 'id'>): Promise<Order> {
-		return db.create<Order>(TableNames.ORDERS, order as Order)
-	},
+  async create(order: Omit<Order, 'id'>): Promise<Order> {
+    return db.create(MOCK_CONFIG.tables.orders, order)
+  },
 
-	async update(id: string, updates: Partial<Order>): Promise<Order> {
-		return db.update<Order>(TableNames.ORDERS, id, updates)
-	},
+  async update(id: string, updates: Partial<Order>): Promise<Order> {
+    return db.update(MOCK_CONFIG.tables.orders, id, updates)
+  },
 
-	async delete(id: string): Promise<void> {
-		return db.remove(TableNames.ORDERS, id)
-	}
+  async delete(id: string): Promise<void> {
+    return db.remove(MOCK_CONFIG.tables.orders, id)
+  }
 }
 
 // Template Functions
 export const TemplateAccess = {
-	async getById(id: string): Promise<Template | null> {
-		return db.getById<Template>(TableNames.TEMPLATES, id)
-	},
+  async getById(id: string): Promise<Template | null> {
+    return db.getById(MOCK_CONFIG.tables.templates, id)
+  },
 
-	async getByClinic(clinicId: string): Promise<Template[]> {
-		return db.queryByIndex<Template>(
-			TableNames.TEMPLATES,
-			'ClinicTemplatesIndex',
-			'clinicId',
-			clinicId
-		)
-	},
+  async getByClinic(clinicId: string): Promise<Template[]> {
+    return db.queryByIndex(
+      MOCK_CONFIG.tables.templates,
+      'clinic-index',
+      'clinicId',
+      clinicId
+    )
+  },
 
-	async create(template: Omit<Template, 'id'>): Promise<Template> {
-		return db.create<Template>(TableNames.TEMPLATES, template as Template)
-	},
+  async create(template: Omit<Template, 'id'>): Promise<Template> {
+    return db.create(MOCK_CONFIG.tables.templates, template)
+  },
 
-	async update(id: string, updates: Partial<Template>): Promise<Template> {
-		return db.update<Template>(TableNames.TEMPLATES, id, updates)
-	},
+  async update(id: string, updates: Partial<Template>): Promise<Template> {
+    return db.update(MOCK_CONFIG.tables.templates, id, updates)
+  },
 
-	async delete(id: string): Promise<void> {
-		return db.remove(TableNames.TEMPLATES, id)
-	}
+  async delete(id: string): Promise<void> {
+    return db.remove(MOCK_CONFIG.tables.templates, id)
+  }
 }
 
 // Settings Functions
 export const SettingsAccess = {
-	async getById(id: string): Promise<Settings | null> {
-		return db.getById<Settings>(TableNames.SETTINGS, id)
-	},
+  async getById(id: string): Promise<Settings | null> {
+    return db.getById(MOCK_CONFIG.tables.settings, id)
+  },
 
-	async getByType(type: string): Promise<Settings[]> {
-		return db.queryByIndex<Settings>(
-			TableNames.SETTINGS,
-			'TypeIndex',
-			'type',
-			type
-		)
-	},
+  async getByType(type: string): Promise<Settings[]> {
+    return db.queryByIndex(
+      MOCK_CONFIG.tables.settings,
+      'type-index',
+      'type',
+      type
+    )
+  },
 
-	async getByOwner(ownerId: string): Promise<Settings[]> {
-		return db.queryByIndex<Settings>(
-			TableNames.SETTINGS,
-			'OwnerIndex',
-			'ownerId',
-			ownerId
-		)
-	},
+  async getByOwner(ownerId: string): Promise<Settings[]> {
+    return db.queryByIndex(
+      MOCK_CONFIG.tables.settings,
+      'owner-index',
+      'ownerId',
+      ownerId
+    )
+  },
 
-	async create(settings: Omit<Settings, 'id'>): Promise<Settings> {
-		return db.create<Settings>(TableNames.SETTINGS, settings as Settings)
-	},
+  async create(settings: Omit<Settings, 'id'>): Promise<Settings> {
+    return db.create(MOCK_CONFIG.tables.settings, settings)
+  },
 
-	async update(id: string, updates: Partial<Settings>): Promise<Settings> {
-		return db.update<Settings>(TableNames.SETTINGS, id, updates)
-	},
+  async update(id: string, updates: Partial<Settings>): Promise<Settings> {
+    return db.update(MOCK_CONFIG.tables.settings, id, updates)
+  },
 
-	async delete(id: string): Promise<void> {
-		return db.remove(TableNames.SETTINGS, id)
-	}
+  async delete(id: string): Promise<void> {
+    return db.remove(MOCK_CONFIG.tables.settings, id)
+  }
 }
