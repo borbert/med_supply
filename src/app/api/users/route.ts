@@ -18,6 +18,7 @@ import {
 import { UserAccess } from '@/lib/models/data-access'
 import { UserSchema, UserUpdateSchema } from '@/lib/api/validation'
 import { withValidation } from '@/lib/api/validation'
+import { User } from '@/lib/models/types'; // Ensure you import the User type
 
 // GET /api/users
 async function getUsers(req: AuthenticatedRequest): Promise<Response> {
@@ -56,7 +57,8 @@ async function createUser(req: AuthenticatedRequest): Promise<Response> {
       throw new Error('Cannot create user for different clinic')
     }
 
-    const user = await UserAccess.create(validatedData)
+    // Use type assertion to ensure validatedData is of type Omit<User, 'id'>
+    const user = await UserAccess.create(validatedData as Omit<User, 'id'>)
     return new Response(JSON.stringify(user), { status: 201 })
   })
 }
