@@ -149,7 +149,7 @@ export default function AdminPage() {
                         <TableCell>{user.role}</TableCell>
                         <TableCell>{user.status}</TableCell>
                         <TableCell>
-                          <Button variant="ghost" size="sm" onClick={() => handleUpdateUserStatus(user.id, !user.status === "Active")}>Edit</Button>
+                          <Button variant="ghost" size="sm" onClick={() => handleUpdateUserStatus(user.id, user.status !== "Active")}>Edit</Button>
                         </TableCell>
                       </TableRow>
                     ))}
