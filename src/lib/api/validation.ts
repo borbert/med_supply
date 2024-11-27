@@ -17,6 +17,9 @@ export const UserSchema = z.object({
   id: IdSchema.optional(),
   email: EmailSchema,
   name: z.string().min(1),
+  firstName: z.firstName, // Add this
+  lastName: z.lastName,   // Add this
+  settings: z.settings,   // Add this
   clinicId: IdSchema,
   role: z.enum(['ADMIN', 'MANAGER', 'STAFF']),
   isActive: z.boolean().default(true),
