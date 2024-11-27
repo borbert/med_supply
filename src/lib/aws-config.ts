@@ -14,3 +14,5 @@ export const MOCK_CONFIG = {
     inventory: 'inventory-table'
   }
 }
+
+export const TableNames = MOCK_CONFIG.tables;
