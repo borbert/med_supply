@@ -23,7 +23,7 @@ import { withValidation } from '@/lib/api/validation'
 async function getUsers(req: AuthenticatedRequest): Promise<Response> {
   const params = parseQueryParams(req)
   const { page, limit } = parsePaginationParams(params)
-  
+
   let users = []
   if (req.user.role === 'ADMIN') {
     // Admins can see all users
@@ -48,7 +48,7 @@ async function getUsers(req: AuthenticatedRequest): Promise<Response> {
 // POST /api/users
 async function createUser(req: AuthenticatedRequest): Promise<Response> {
   const data = await parseRequestBody(req)
-  
+
   // Validate and create user
   return withValidation(UserSchema, data, async (validatedData) => {
     // Only admins can create users for other clinics
@@ -64,7 +64,7 @@ async function createUser(req: AuthenticatedRequest): Promise<Response> {
 // PUT /api/users
 async function updateUsers(req: AuthenticatedRequest): Promise<Response> {
   const data = await parseRequestBody(req)
-  
+
   return withValidation(UserUpdateSchema, data, async (validatedData) => {
     // Only admins can update users from other clinics
     if (req.user.role !== 'ADMIN' && validatedData.clinicId !== req.user.clinicId) {

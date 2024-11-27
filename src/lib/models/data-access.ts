@@ -53,6 +53,10 @@ export const UserAccess = {
 
   async delete(id: string): Promise<void> {
     return db.remove(MOCK_CONFIG.tables.users, id)
+  },
+
+  async getAll(): Promise<User[]> {
+    return db.scanAll(MOCK_CONFIG.tables.users)
   }
 }
 
