@@ -39,7 +39,7 @@ const cognitoClient = new CognitoIdentityProviderClient({
 
 async function testDynamoDB() {
   console.log('\n🔍 Testing DynamoDB Connection...')
-  
+
   try {
     // First, let's check if we can scan the tables
     console.log('\nListing available tables...')
@@ -51,7 +51,7 @@ async function testDynamoDB() {
         }))
         console.log(`✅ Table ${tableName} exists and is accessible`)
         console.log(`   Items found: ${scanResult.Items?.length || 0}`)
-        
+
         if (scanResult.Items?.length) {
           console.log('   Sample item:', JSON.stringify(scanResult.Items[0], null, 2))
         }
@@ -80,7 +80,7 @@ async function testDynamoDB() {
     console.log('\nTesting User table operations...')
     console.log('Testing CREATE operation...')
     await docClient.send(new PutCommand({
-      TableName: TableNames.USERS,
+      TableName: TableNames.users,
       Item: testUser
     }))
     console.log('✅ CREATE successful')
@@ -96,7 +96,7 @@ async function testDynamoDB() {
     // Delete (cleanup)
     console.log('Testing DELETE operation...')
     await docClient.send(new DeleteCommand({
-      TableName: TableNames.USERS,
+      TableName: TableNames.users,
       Key: { id: testUser.id }
     }))
     console.log('✅ DELETE successful')
@@ -110,7 +110,7 @@ async function testDynamoDB() {
 
 async function testCognito() {
   console.log('\n🔍 Testing Cognito Configuration...')
-  
+
   try {
     const command = new ListUsersCommand({
       UserPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID,
@@ -138,7 +138,7 @@ async function testCognito() {
 
 async function runTests() {
   console.log('🚀 Starting AWS configuration tests...')
-  
+
   try {
     await testDynamoDB()
     await testCognito()
