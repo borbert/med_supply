@@ -31,7 +31,7 @@ export const UserAccess = {
       'email',
       email
     )
-    return users[0] || null
+    return users[0]
   },
 
   async getByClinic(clinicId: string): Promise<User[]> {
