@@ -25,12 +25,12 @@ async function getUsers(req: AuthenticatedRequest): Promise<Response> {
   const { page, limit } = parsePaginationParams(params)
 
   let users = []
-  if (req.user.role === 'ADMIN') {
+  if (req.user.role === 'admin') {
     // Admins can see all users
     users = await UserAccess.getAll()
   } else {
     // Non-admins can only see users from their clinic
-    users = await UserAccess.getByClinic(req.user.clinicId)
+    users = await UserAccess.getByClinic(req.user.clinicId ?? '')
   }
 
   // Apply pagination
@@ -52,7 +52,7 @@ async function createUser(req: AuthenticatedRequest): Promise<Response> {
   // Validate and create user
   return withValidation(UserSchema, data, async (validatedData) => {
     // Only admins can create users for other clinics
-    if (req.user.role !== 'ADMIN' && validatedData.clinicId !== req.user.clinicId) {
+    if (req.user.role !== 'admin' && validatedData.clinicId !== req.user.clinicId) {
       throw new Error('Cannot create user for different clinic')
     }
 
@@ -67,7 +67,7 @@ async function updateUsers(req: AuthenticatedRequest): Promise<Response> {
 
   return withValidation(UserUpdateSchema, data, async (validatedData) => {
     // Only admins can update users from other clinics
-    if (req.user.role !== 'ADMIN' && validatedData.clinicId !== req.user.clinicId) {
+    if (req.user.role !== 'admin' && validatedData.clinicId !== req.user.clinicId) {
       throw new Error('Cannot update user from different clinic')
     }
 
@@ -95,7 +95,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   return withErrorHandler(async () => {
     return withAuth(req, async (authedReq) => {
-      return withRole(['ADMIN', 'MANAGER'])(authedReq, async (roleAuthedReq) => {
+      return withRole(['amind', 'manager'])(authedReq, async (roleAuthedReq) => {
         return createUser(roleAuthedReq)
       })
     })
@@ -105,7 +105,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   return withErrorHandler(async () => {
     return withAuth(req, async (authedReq) => {
-      return withRole(['ADMIN', 'MANAGER'])(authedReq, async (roleAuthedReq) => {
+      return withRole(['amdin', 'manager'])(authedReq, async (roleAuthedReq) => {
         return updateUsers(roleAuthedReq)
       })
     })
@@ -115,7 +115,7 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   return withErrorHandler(async () => {
     return withAuth(req, async (authedReq) => {
-      return withRole(['ADMIN'])(authedReq, async (roleAuthedReq) => {
+      return withRole(['admin'])(authedReq, async (roleAuthedReq) => {
         return deleteUsers(roleAuthedReq)
       })
     })
