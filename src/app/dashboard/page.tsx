@@ -20,7 +20,15 @@ const mockAdminStats = {
   pendingReports: 2
 }
 
-const mockRecentActivity = [
+type ActivityItem = {
+  id: string
+  type: 'order' | 'inventory' | 'report'
+  description: string
+  timestamp: string
+  status: 'pending' | 'completed' | 'approved'
+}
+
+const mockRecentActivity: ActivityItem[] = [
   {
     id: '1',
     type: 'order',
@@ -42,7 +50,8 @@ const mockRecentActivity = [
     timestamp: '5 hours ago',
     status: 'approved'
   }
-] as const
+]
+
 
 interface UserData {
   name?: string;
