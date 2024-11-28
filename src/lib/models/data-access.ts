@@ -19,7 +19,8 @@ import {
 } from './types'
 
 // Generic type for all entities with ID
-type WithId = { id?: string }
+type WithOptionalId = { id?: string }
+type WithRequiredId = { id: string }
 
 // User Functions
 export const UserAccess = {
@@ -47,7 +48,8 @@ export const UserAccess = {
   },
 
   async create(user: Omit<User, 'id'>): Promise<User> {
-    return db.create<User & WithId>(MOCK_CONFIG.tables.users, user)
+    const input = user as WithOptionalId
+    return db.create(MOCK_CONFIG.tables.users, input) as Promise<User>
   },
 
   async update(id: string, updates: Partial<User>): Promise<User> {
@@ -74,7 +76,8 @@ export const ClinicAccess = {
   },
 
   async create(clinic: Omit<Clinic, 'id'>): Promise<Clinic> {
-    return db.create<Clinic & WithId>(MOCK_CONFIG.tables.clinics, clinic)
+    const input = clinic as WithOptionalId
+    return db.create(MOCK_CONFIG.tables.users, input) as Promise<Clinic>
   },
 
   async update(id: string, updates: Partial<Clinic>): Promise<Clinic> {
@@ -106,7 +109,8 @@ export const ProductAccess = {
   },
 
   async create(product: Omit<Product, 'id'>): Promise<Product> {
-    return db.create<Product & WithId>(MOCK_CONFIG.tables.products, product)
+    const input = product as WithOptionalId
+    return db.create(MOCK_CONFIG.tables.products, input) as Promise<Product>
   },
 
   async update(id: string, updates: Partial<Product>): Promise<Product> {
@@ -152,7 +156,8 @@ export const OrderAccess = {
   },
 
   async create(order: Omit<Order, 'id'>): Promise<Order> {
-    return db.create<Order & WithId>(MOCK_CONFIG.tables.orders, order)
+    const input = order as WithOptionalId
+    return db.create(MOCK_CONFIG.tables.orders, input) as Promise<Order>
   },
 
   async update(id: string, updates: Partial<Order>): Promise<Order> {
@@ -180,7 +185,8 @@ export const TemplateAccess = {
   },
 
   async create(template: Omit<Template, 'id'>): Promise<Template> {
-    return db.create<Template & WithId>(MOCK_CONFIG.tables.templates, template)
+    const input = template as WithOptionalId
+    return db.create(MOCK_CONFIG.tables.templates, input) as Promise<Template>
   },
 
   async update(id: string, updates: Partial<Template>): Promise<Template> {
@@ -217,7 +223,8 @@ export const SettingsAccess = {
   },
 
   async create(settings: Omit<Settings, 'id'>): Promise<Settings> {
-    return db.create<Settings & WithId>(MOCK_CONFIG.tables.settings, settings)
+    const input = settings as WithOptionalId
+    return db.create(MOCK_CONFIG.tables.settings, input) as Promise<Settings>
   },
 
   async update(id: string, updates: Partial<Settings>): Promise<Settings> {
