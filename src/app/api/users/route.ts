@@ -57,6 +57,8 @@ async function createUser(req: AuthenticatedRequest): Promise<Response> {
 
     const userToCreate: Omit<User, 'id'> = {
       ...validatedData,
+      status: validatedData.status || 'active',
+      isActive: validatedData.isActive ?? true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     }

@@ -18,8 +18,8 @@ export interface User {
 	status: 'active' | 'disabled'
 	isActive: boolean
 	settings?: Record<string, any>
-	createdAt?: string
-	updatedAt?: string
+	createdAt: string
+	updatedAt: string
 }
 
 export interface UserSettings {

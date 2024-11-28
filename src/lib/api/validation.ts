@@ -20,8 +20,8 @@ export const UserSchema = z.object({
   lastName: z.string().min(1).optional(),
   role: z.enum(['ADMIN', 'MANAGER', 'STAFF']),
   clinicId: z.string().uuid().optional(),
-  status: z.enum(['active', 'disabled']).default('active'),
-  isActive: z.boolean().default(true),
+  status: z.enum(['active', 'disabled']),
+  isActive: z.boolean(),
   settings: z.record(z.any()).optional(),
   createdAt: z.string().datetime().optional(),
   updatedAt: z.string().datetime().optional()
