@@ -10,7 +10,7 @@ export default function Home() {
         </div>
         
         <h1 className="text-3xl font-bold text-center">
-          Welcome to Your Application
+          Welcome to MedSupply
         </h1>
         
         <p className="text-center text-gray-600 dark:text-gray-400 max-w-md">
@@ -18,7 +18,7 @@ export default function Home() {
         </p>
 
         <Link 
-          href="/auth" 
+          href="/login" 
           className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-8 sm:px-10"
         >
           Sign In / Sign Up
