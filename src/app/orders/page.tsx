@@ -24,7 +24,7 @@ interface Order {
   clinicId: string
   clinicName: string
   orderDate: string
-  status: 'pending' | 'approved' | 'shipped' | 'delivered'
+  status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled'
   items: Array<{
     id: string
     name: string
@@ -93,10 +93,11 @@ export default function OrdersPage() {
 
   const getStatusColor = (status: Order['status']) => {
     const colors = {
-      pending: 'text-yellow-600 bg-yellow-100',
-      approved: 'text-blue-600 bg-blue-100',
-      shipped: 'text-purple-600 bg-purple-100',
-      delivered: 'text-green-600 bg-green-100'
+      Pending: 'text-yellow-600 bg-yellow-100',
+      Processing: 'text-blue-600 bg-blue-100',
+      Shipped: 'text-purple-600 bg-purple-100',
+      Delivered: 'text-green-600 bg-green-100',
+      Cancelled: 'text-red-600 bg-red-100'
     }
     return colors[status]
   }
