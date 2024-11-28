@@ -1,8 +1,8 @@
 import * as React from "react"
-import { Button as NextUIButton } from "@nextui-org/react"
+import { Button as NextUIButton, ButtonProps as NextUIButtonProps } from "@nextui-org/react"
 import { cn } from "@/lib/utils"
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends Omit<NextUIButtonProps, 'size' | 'variant'> {
   variant?: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link"
   size?: "default" | "sm" | "lg"
 }
