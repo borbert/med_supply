@@ -14,20 +14,20 @@ export const DateSchema = z.string().datetime()
 
 // User validation schemas
 export const UserSchema = z.object({
-  id: IdSchema.optional(),
-  email: EmailSchema,
+  email: z.string().email(),
   name: z.string().min(1),
-  firstName: z.firstName, // Add this
-  lastName: z.lastName,   // Add this
-  settings: z.settings,   // Add this
-  clinicId: IdSchema,
+  firstName: z.string().min(1).optional(),
+  lastName: z.string().min(1).optional(),
   role: z.enum(['ADMIN', 'MANAGER', 'STAFF']),
+  clinicId: z.string().uuid().optional(),
+  status: z.enum(['active', 'disabled']).default('active'),
   isActive: z.boolean().default(true),
-  createdAt: DateSchema.optional(),
-  updatedAt: DateSchema.optional()
+  settings: z.record(z.any()).optional(),
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional()
 })
 
-export const UserUpdateSchema = UserSchema.partial().omit({ id: true })
+export const UserUpdateSchema = UserSchema.partial()
 
 // Clinic validation schemas
 export const ClinicSchema = z.object({

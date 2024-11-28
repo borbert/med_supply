@@ -1,3 +1,5 @@
+import { join } from "path"
+
 /**
  * Core Type Definitions
  * 
@@ -8,13 +10,16 @@
 export interface User {
 	id: string
 	email: string
-	firstName: string
-	lastName: string
-	role: 'admin' | 'manager' | 'staff'
-	clinicId: string
-	settings: UserSettings
-	createdAt: string
-	updatedAt: string
+	name: string
+	firstName?: string
+	lastName?: string
+	role: 'ADMIN' | 'MANAGER' | 'STAFF'
+	clinicId?: string
+	status: 'active' | 'disabled'
+	isActive: boolean
+	settings?: Record<string, any>
+	createdAt?: string
+	updatedAt?: string
 }
 
 export interface UserSettings {

@@ -50,15 +50,18 @@ async function getUsers(req: AuthenticatedRequest): Promise<Response> {
 async function createUser(req: AuthenticatedRequest): Promise<Response> {
   const data = await parseRequestBody(req)
 
-  // Validate and create user
   return withValidation(UserSchema, data, async (validatedData) => {
-    // Only admins can create users for other clinics
     if (req.user.role !== 'admin' && validatedData.clinicId !== req.user.clinicId) {
       throw new Error('Cannot create user for different clinic')
     }
 
-    // Use type assertion to ensure validatedData is of type Omit<User, 'id'>
-    const user = await UserAccess.create(validatedData as Omit<User, 'id'>)
+    const userToCreate: Omit<User, 'id'> = {
+      ...validatedData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    }
+
+    const user = await UserAccess.create(userToCreate)
     return new Response(JSON.stringify(user), { status: 201 })
   })
 }
@@ -68,12 +71,16 @@ async function updateUsers(req: AuthenticatedRequest): Promise<Response> {
   const data = await parseRequestBody(req)
 
   return withValidation(UserUpdateSchema, data, async (validatedData) => {
-    // Only admins can update users from other clinics
     if (req.user.role !== 'admin' && validatedData.clinicId !== req.user.clinicId) {
       throw new Error('Cannot update user from different clinic')
     }
 
-    const user = await UserAccess.update(req.user.id, validatedData)
+    const updates: Partial<User> = {
+      ...validatedData,
+      updatedAt: new Date().toISOString()
+    }
+
+    const user = await UserAccess.update(req.user.id, updates)
     return new Response(JSON.stringify(user))
   })
 }
