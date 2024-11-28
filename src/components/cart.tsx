@@ -69,7 +69,7 @@ export function Cart({ items, onUpdateQuantity, onRemoveItem, onCheckout }: Cart
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="relative">
+        <Button variant="outline" size="sm" className="relative h-8 w-8 p-0">
           <ShoppingCart className="h-4 w-4" />
           {items.length > 0 && (
             <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-primary text-xs text-primary-foreground flex items-center justify-center">
@@ -120,7 +120,7 @@ export function Cart({ items, onUpdateQuantity, onRemoveItem, onCheckout }: Cart
                       <div className="flex items-center gap-2">
                         <Button
                           variant="outline"
-                          size="icon"
+                          size="sm"
                           className="h-8 w-8"
                           onClick={() => updateQuantity(item.id, -1)}
                           disabled={item.quantity <= 1}
@@ -137,7 +137,7 @@ export function Cart({ items, onUpdateQuantity, onRemoveItem, onCheckout }: Cart
                         />
                         <Button
                           variant="outline"
-                          size="icon"
+                          size="sm"
                           className="h-8 w-8"
                           onClick={() => updateQuantity(item.id, 1)}
                           disabled={item.quantity >= item.maxQuantity}
@@ -152,7 +152,7 @@ export function Cart({ items, onUpdateQuantity, onRemoveItem, onCheckout }: Cart
                     <TableCell>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         className="h-8 w-8"
                         onClick={() => onRemoveItem(item.id)}
                       >
