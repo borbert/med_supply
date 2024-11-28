@@ -5,14 +5,17 @@
  * TODO: Implement proper AWS configuration.
  */
 
-export const MOCK_CONFIG = {
-  region: 'us-east-1',
-  tables: {
-    users: 'users-table',
-    clinics: 'clinics-table',
-    orders: 'orders-table',
-    inventory: 'inventory-table'
-  }
-}
+import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
-export const TableNames = MOCK_CONFIG.tables;
+// Initialize DynamoDB client
+const client = new DynamoDBClient({
+    region: process.env.NEXT_PUBLIC_AWS_REGION || 'us-east-1'
+});
+
+export const dynamoDb = DynamoDBDocumentClient.from(client);
+
+export const TableNames = {
+    USERS: 'users'
+    // ... other table names
+};
