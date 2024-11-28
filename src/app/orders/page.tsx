@@ -37,7 +37,7 @@ interface Order {
 interface OrderTemplate {
   id: string
   name: string
-  description: string
+  description?: string
   items: Array<{
     id: string
     name: string
@@ -145,7 +145,7 @@ export default function OrdersPage() {
                   {orderTemplates.map((template) => (
                     <TableRow key={template.id}>
                       <TableCell className="font-medium">{template.name}</TableCell>
-                      <TableCell>{template.description}</TableCell>
+                      <TableCell>{template.description || 'No description available'}</TableCell>
                       <TableCell>{template.items.length} items</TableCell>
                       <TableCell>All Clinics</TableCell>
                       <TableCell>{template.lastUsed ? new Date(template.lastUsed).toLocaleDateString() : 'Never'}</TableCell>
@@ -303,7 +303,7 @@ export default function OrdersPage() {
                       <CardHeader>
                         <CardTitle className="text-lg">{template.name}</CardTitle>
                         <p className="text-sm text-muted-foreground">
-                          {template.description}
+                          {template.description || 'No description available'}
                         </p>
                       </CardHeader>
                       <CardContent className="flex-1">
