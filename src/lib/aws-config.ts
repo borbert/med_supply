@@ -16,9 +16,13 @@ const client = new DynamoDBClient({
 export const dynamoDb = DynamoDBDocumentClient.from(client);
 
 export const TableNames = {
-    USERS: 'users'
-    // ... other table names
-};
+    USERS: 'users',
+    CLINICS: 'clinics',
+    PRODUCTS: 'products',
+    ORDERS: 'orders',
+    TEMPLATES: 'templates',
+    SETTINGS: 'settings'
+} as const;
 
 export const MOCK_CONFIG = {
     enabled: true,
