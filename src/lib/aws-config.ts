@@ -19,3 +19,8 @@ export const TableNames = {
     USERS: 'users'
     // ... other table names
 };
+
+export const MOCK_CONFIG = {
+    enabled: process.env.MOCK_AWS === 'true',
+    // Add any other mock configuration settings you need
+};
