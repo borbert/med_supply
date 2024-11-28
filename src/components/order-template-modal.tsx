@@ -36,7 +36,7 @@ interface OrderTemplateModalProps {
   template: {
     id: string
     name: string
-    description: string
+    description?: string
     items: OrderTemplateItem[]
   } | null
   onAddToCart: (items: Array<{ id: string; name: string; quantity: number; price: number; maxQuantity: number; description?: string; sku?: string }>) => void
