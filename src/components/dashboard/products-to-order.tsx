@@ -86,7 +86,7 @@ export function ProductsToOrder({ isAdmin, clinicId }: ProductsToOrderProps) {
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Badge variant={product.quantity === 0 ? "destructive" : "warning"}>
+                  <Badge variant={product.quantity === 0 ? "destructive" : "secondary"}>
                     {product.quantity === 0 ? "Out of Stock" : "Low Stock"}
                   </Badge>
                   <Button

@@ -134,7 +134,7 @@ export function OrderTemplateModal({ isOpen, onClose, template, onAddToCart }: O
                       <div className="flex items-center gap-2">
                         <Button
                           variant="outline"
-                          size="icon"
+                          size="sm"
                           className="h-8 w-8"
                           onClick={() => updateQuantity(item.id, -1)}
                           disabled={!quantities[item.id] && quantities[item.id] !== 0}
@@ -155,7 +155,7 @@ export function OrderTemplateModal({ isOpen, onClose, template, onAddToCart }: O
                         </div>
                         <Button
                           variant="outline"
-                          size="icon"
+                          size="sm"
                           className="h-8 w-8"
                           onClick={() => updateQuantity(item.id, 1)}
                         >
