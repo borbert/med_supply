@@ -214,8 +214,8 @@ export default function InventoryPage() {
                     <div className="absolute top-2 right-2">
                       <Button
                         variant="secondary"
-                        size="icon"
-                        className="h-8 w-8 bg-white/90 hover:bg-white"
+                        size="sm"
+                        className="h-8 w-8 bg-white/90 hover:bg-white p-0"
                         onClick={() => {
                           // TODO: Implement edit functionality
                           console.log('Edit item:', item)
